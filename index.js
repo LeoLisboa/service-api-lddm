@@ -2,7 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 
 const app = express();
-const port = 443;
+const port = 3000;
 
 app.use(express.json());
 
@@ -37,6 +37,9 @@ app.use('/checkEmail', checkEmail);
 
 const checkPhone = require('./src/routes/checkPhone');
 app.use('/checkPhone', checkPhone);
+
+const sendCode = require('./src/routes/sendCode');
+app.use('/sendCode', sendCode);
 
 app.use((req, res, next) => {
   const error = new Error('A rota solicitada não existe');
