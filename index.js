@@ -1,3 +1,5 @@
+process.env.NODE_ENV = 'development';
+
 const express = require('express');
 const morgan = require('morgan');
 
