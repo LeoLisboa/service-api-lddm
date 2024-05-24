@@ -4,7 +4,7 @@ const express = require('express');
 const morgan = require('morgan');
 
 const app = express();
-const port = 10000;
+const port = process.env.PORT || 10000;
 
 app.use(express.json());
 
@@ -71,6 +71,6 @@ app.use((error, req, res, next) => {
 
 // Inicie o servidor na porta especificada
 
-app.listen( process.env.PORT || port, () => {
-  console.log(`Servidor está ouvindo na porta ${process.env.PORT || port}`);
+app.listen( port, () => {
+  console.log(`Servidor está ouvindo na porta ${port}`);
 });
