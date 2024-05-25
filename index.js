@@ -6,7 +6,8 @@ const morgan = require('morgan');
 const app = express();
 const port = process.env.PORT || 10000;
 
-app.use(express.json());
+app.use(express.json({ limit: '5000kb' }));
+
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -52,7 +53,8 @@ app.use('/getAllProducts', getAllProducts);
 const getProduct = require('./src/routes/product/getProduct');
 app.use('/getProduct', getProduct);
 
-
+const createProduct = require('./src/routes/product/createProduct');
+app.use('/createProduct', createProduct);
 
 app.use((req, res, next) => {
   const error = new Error('A rota solicitada não existe');
