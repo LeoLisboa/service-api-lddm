@@ -31,6 +31,9 @@ app.get('/', (req, res, next) => {
 const getUser = require('./src/routes/user/getUser');
 app.use('/getUser', getUser);
 
+const updateUser = require('./src/routes/user/updateUser');
+app.use('/updateUser', updateUser);
+
 const registerRoute = require('./src/routes/user/register');
 app.use('/register', registerRoute);
 
