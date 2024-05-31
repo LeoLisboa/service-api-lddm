@@ -17,6 +17,12 @@ router.get('/', async (req, res) => {
                 console.error('Erro ao buscar produtos do banco de dados:', error);
                 return res.status(500).json({ message: "Erro no servidor" });
             }
+            
+            // Convert the images field from a comma-separated string to an array for each product
+            results.forEach(result => {
+                result.images = result.images ? result.images.split(',') : [];
+            });
+
             return res.status(200).json({ produtos: results });
         });
     } catch (error) {
