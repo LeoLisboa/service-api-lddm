@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const connection = require('../../database/connection');
 const { generateToken } = require('../jwUtils');
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
     const { email, password } = req.body;
 
     const query = 'SELECT * FROM user WHERE email = ?';
