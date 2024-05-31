@@ -22,8 +22,6 @@ router.put('/', async (req, res) => {
         return res.status(400).json({ message: "ID do usuário é obrigatório" });
     }
 
-
-
     // Primeiro, obtenha os nomes das colunas da tabela 'user'
     connection.query('SHOW COLUMNS FROM user', async (err, columns) => {
         if (err) {
