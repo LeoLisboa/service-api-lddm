@@ -49,6 +49,10 @@ app.use('/getProduct', getProduct);
 const createProduct = require('./src/routes/product/createProduct');
 app.use('/createProduct', createProduct);
 
+const registerBid = require('./src/routes/product/registerBid');
+app.use('/registerBid', registerBid);
+
+
 app.use((req, res, next) => {
   const error = new Error('A rota solicitada não existe');
   error.status = 404;

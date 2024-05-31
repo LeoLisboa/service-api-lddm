@@ -6,14 +6,14 @@ const connection = require('../../database/connection');
 router.get('/:id', async (req, res) => {
     try {
         const id = req.params.id;
-        
+
         const query = `
-            SELECT p.*, ps.status AS status_string, GROUP_CONCAT(pi.url) AS images
-            FROM product p
-            JOIN product_status ps ON p.status = ps.id
-            LEFT JOIN product_image pi ON p.id = pi.id_product
-            WHERE p.id = ?
-            GROUP BY p.id, ps.status
+        SELECT p.*, pb.id_user_bid, pb.price,pb.created_at AS bid_created_at, pb.updated_at AS bid_updated_at,GROUP_CONCAT(pi.url) AS images, ps.status AS status_name FROM product p 
+        JOIN product_status ps ON p.status = ps.id
+        LEFT JOIN product_image pi ON (p.id = pi.id_product)
+        LEFT JOIN product_bid pb ON (p.id = pb.id_product) 
+        WHERE p.id = ?
+        GROUP BY p.id, pb.price,pb.created_at, pb.updated_at,pb.id_user_bid; 
         `;
         
         connection.query(query, [id], (error, results) => {
