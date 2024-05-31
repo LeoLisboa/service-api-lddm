@@ -15,12 +15,12 @@ router.post('/', async (req, res) => {
         return res.status(401).json({ message: "Token não fornecido, inválido ou expirado" });
     }
 
-    let { name, desc, start_price, grading, imageBase64 } = req.body;
+    let { name, desc, start_price, final_bid_price, grading, imageBase64 } = req.body;
     let fileUrl = await saveImageAzure(imageBase64);
 
     try {
-        const insertProductQuery = 'INSERT INTO product (id_user, name , `desc`, grading, start_price, current_price, status) VALUES (?, ?, ?, ?, ?, ?, ?)';
-        const productResult = await queryAsync(insertProductQuery, [dataUser.id, name, desc, grading, start_price, null, 0]);
+        const insertProductQuery = 'INSERT INTO product (id_user, name , `desc`, final_bid_price, grading, start_price, current_price, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+        const productResult = await queryAsync(insertProductQuery, [dataUser.id, name, desc, final_bid_price, grading, start_price, null, 0]);
         
         const idProduct = productResult.insertId;
 
