@@ -1,23 +1,20 @@
 const express = require('express');
 const router = express.Router();
-const { getUserFromToken } = require('../jwUtils');
 const connection = require('../../database/connection');
+const getHeaderToken = require('../getHeaderToken');
 
-router.get('/', (req, res) => {
-    const token = req.headers.authorization.split(' ')[1];
+// Use o middleware de autenticação para a rota de usuário
+router.get('/', getHeaderToken, (req, res) => {
+    const userData = req.user;
 
-    if (!token) {
-        return res.status(401).json({ message: "Token não fornecido ou Inválido"});
-    }
+    const query = `
+        SELECT u.*, 
+               a.id AS address_id, a.cep, a.number, a.complement, a.reference, a.created_at AS address_created_at, a.updated_at AS address_updated_at
+        FROM user u
+        LEFT JOIN user_address a ON u.id = a.id_user
+        WHERE u.id = ?
+    `;
 
-    const userData = getUserFromToken(token);
-
-    if (!userData) {
-        return res.status(401).json({ message: "Token inválido ou expirado" });
-    }
-
-    const query = 'SELECT * FROM user WHERE id = ?';
-''
     connection.query(query, [userData.id], (error, results) => {
         if (error) {
             console.error('Erro ao buscar usuário do banco de dados:', error);
@@ -26,7 +23,35 @@ router.get('/', (req, res) => {
         if (results.length === 0) {
             return res.status(404).json({ message: "Usuário não encontrado" });
         }
-        return res.status(200).json({ user: results[0] });
+
+        const user = {
+            id: results[0].id,
+            name: results[0].name,
+            perfil_url: results[0].perfil_url,
+            email: results[0].email,
+            phone: results[0].phone,
+            birthdate: results[0].birthdate,
+            status: results[0].status,
+            created_at: results[0].created_at,
+            updated_at: results[0].updated_at,
+            addresses: []
+        };
+
+        results.forEach(result => {
+            if (result.address_id) {
+                user.addresses.push({
+                    id: result.address_id,
+                    cep: result.cep,
+                    number: result.number,
+                    complement: result.complement,
+                    reference: result.reference,
+                    created_at: result.address_created_at,
+                    updated_at: result.address_updated_at
+                });
+            }
+        });
+
+        return res.status(200).json({ user });
     });
 });
 

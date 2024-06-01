@@ -31,6 +31,12 @@ app.use('/register', registerRoute);
 const loginRoute = require('./src/routes/user/login');
 app.use('/login', loginRoute);
 
+const createAddress = require('./src/routes/user/createAddress');
+app.use('/createAddress', createAddress);
+
+const getNotification = require('./src/routes/user/getNotification');
+app.use('/getNotification', getNotification);
+
 const checkEmail = require('./src/routes/user/checkEmail');
 app.use('/checkEmail', checkEmail);
 

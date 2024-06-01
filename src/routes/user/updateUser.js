@@ -1,26 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
-const { getUserFromToken } = require('../jwUtils');
+const getHeaderToken = require('../getHeaderToken');
 const connection = require('../../database/connection');
 
-router.put('/', async (req, res) => {
-    const token = req.headers.authorization.split(' ')[1];
-    const updatesData = req.body; // Dados recebidos do corpo da requisição
-    
-    if (!token) {
-        return res.status(401).json({ message: "Token não fornecido" });
-    }
-
-    const userData = getUserFromToken(token);
-    
-    if (!userData) {
-        return res.status(401).json({ message: "Token inválido ou expirado" });
-    }
-
-    if (!userData.id) {
-        return res.status(400).json({ message: "ID do usuário é obrigatório" });
-    }
+router.put('/', getHeaderToken, (req, res) => {
+    const userData = req.user;
+    const updatesData = req.body;
 
     // Primeiro, obtenha os nomes das colunas da tabela 'user'
     connection.query('SHOW COLUMNS FROM user', async (err, columns) => {
@@ -39,6 +25,10 @@ router.put('/', async (req, res) => {
         if (updatesData.id) {
             invalidFields['id'] = 'O id não pode ser modificado.';    
             delete updatesData.id;
+        }
+
+        if (updatesData.perfil_url) {
+            updatesData.perfil_url = await saveImageAzure(updatesData.perfil_url);
         }
 
         for (const [key, value] of Object.entries(updatesData)) {

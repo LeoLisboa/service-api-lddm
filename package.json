@@ -28,10 +28,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JoaoLimaV/service-api-lddm.git"
+    "url": "git+https://github.com/LeoLisboa/service-api-lddm"
   },
   "bugs": {
-    "url": "https://github.com/JoaoLimaV/service-api-lddm/issues"
+    "url": "https://github.com/LeoLisboa/service-api-lddm/issues"
   },
-  "homepage": "https://github.com/JoaoLimaV/service-api-lddm#readme"
+  "homepage": "https://github.com/LeoLisboa/service-api-lddm#readme"
 }
