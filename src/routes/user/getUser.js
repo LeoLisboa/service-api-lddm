@@ -12,7 +12,7 @@ router.get('/', getHeaderToken, (req, res) => {
                a.id AS address_id, a.cep, a.number, a.complement, a.reference, a.created_at AS address_created_at, a.updated_at AS address_updated_at
         FROM user u
         LEFT JOIN user_address a ON u.id = a.id_user
-        WHERE u.id = ?
+        WHERE u.id = ?  && a.status = 1
     `;
 
     connection.query(query, [userData.id], (error, results) => {

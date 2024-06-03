@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const getHeaderToken = require('../getHeaderToken');
 const connection = require('../../database/connection');
+const { saveImageAzure } = require('../Image');
 
 router.put('/', getHeaderToken, (req, res) => {
     const userData = req.user;
