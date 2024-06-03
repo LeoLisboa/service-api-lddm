@@ -33,15 +33,16 @@ router.post('/', getHeaderToken, async (req, res) => {
         }
 
         // Segunda consulta para inserir um novo lance
-        await queryDatabase(
+        const insertBidResult = await queryDatabase(
             'INSERT INTO product_bid (id_product, id_user_bid, price) VALUES (?, ?, ?)',
             [id_product, userData.id, price]
         );
 
         // Enviar notificações
-        await saveNotify('userBid', userData.id, id_product);
+        await saveNotify('userBid', userData.id, { "id_bid": insertBidResult.insertId });
+
         if (last_bid_user_id) {
-            await saveNotify('anotherUserBid', last_bid_user_id, id_product);
+            await saveNotify('anotherUserBid', last_bid_user_id, { "id_bid": insertBidResult.insertId });
         }
 
         return res.status(201).json({ message: "Lance registrado com sucesso" });

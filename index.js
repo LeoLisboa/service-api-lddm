@@ -34,7 +34,10 @@ app.use('/login', loginRoute);
 const createAddress = require('./src/routes/user/createAddress');
 app.use('/createAddress', createAddress);
 
-const getNotification = require('./src/routes/user/getNotification');
+const removeAddress = require('./src/routes/user/removeAddress');
+app.use('/removeAddress', removeAddress);
+
+const getNotification = require('./src/routes/notify/getNotification');
 app.use('/getNotification', getNotification);
 
 const checkEmail = require('./src/routes/user/checkEmail');

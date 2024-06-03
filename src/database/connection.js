@@ -4,7 +4,7 @@ const mysql = require('mysql');
 
 // Configuração da conexão com o banco de dados MySQL
 const connection = mysql.createConnection({
-    host: 'apidbsql.mysql.database.azure.com', // host do seu banco de dados
+    host: 'lddmsqldb.mysql.database.azure.com', // host do seu banco de dados
     user: 'apiuserdb', // usuário do banco de dados
     password: 'u$er@zureDB', // senha do banco de dados
     database: 'lddm_api' // nome do banco de dados

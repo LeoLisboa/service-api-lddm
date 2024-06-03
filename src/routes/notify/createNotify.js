@@ -25,20 +25,23 @@ let notify = {
         message: "Você fez um lance no produto name_produto no valor de price_produto",
         // addons: {
         //     id_product: 0,
-        //     name_produto: 0,
-        //     price_produto: 0
         // }
     },
     vendorBid: {
         title: "Seu produto recebeu um lance.",
         type: 5,
         message: "Fizeram um lance no name_produto no valor de price_produto.",
-        
+        // addons: {
+        //     id_product: 0,
+        // }
     },
     anotherUserBid: {
         title: "Corra para não perder",
         type: 5,
         message: "Outro usuário ofertou no seu produto, corra antes que o leilão acabe.",
+        // addons: {
+        //     id_product: 0,
+        // }
     },
 };
 
@@ -46,9 +49,9 @@ let notify = {
 async function saveNotify(type, idUser, addons) {
     const query = 'INSERT INTO user_notification (id_user, type, title, message, addons) VALUES (?, ?, ?, ?, ?)';
     return new Promise((resolve, reject) => {
-        connection.query(query, [idUser, notify[type].type, notify[type].title, notify[type].message, (addons != null) ? addons : null], (error, results) => {
+        connection.query(query, [idUser, notify[type].type, notify[type].title, notify[type].message, JSON.stringify(addons)], (error, results) => {
             if (error) {
-                console.error('Erro inserir notificação:', error);
+                console.error('Erro ao inserir notificação:', error);
                 reject(false);
             } else {
                 resolve(true);
@@ -58,3 +61,4 @@ async function saveNotify(type, idUser, addons) {
 }
 
 module.exports = { saveNotify };
+

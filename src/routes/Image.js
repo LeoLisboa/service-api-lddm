@@ -2,9 +2,9 @@ const azure = require('azure-storage')
 const { v1: uuidv1 } = require('uuid');
 
 async function saveImageAzure(imageBase64) {
-    let fileName = uuidv1() + `.png`;
+    let fileName = uuidv1() + '.png';
 
-    const blobSvc = azure.createBlobService("DefaultEndpointsProtocol=https;AccountName=ftplddm;AccountKey=7GADGSaAeNiVnIuEWdbHI1Go87695aN1zCpkZz1CMaapjK8+aqj5d8XFI33u8Ot3Lhy3OKM/QV5d+ASthqYCvw==;EndpointSuffix=core.windows.net");
+    const blobSvc = azure.createBlobService("DefaultEndpointsProtocol=https;AccountName=lddmftpimage;AccountKey=BHKeyz2mN64vXYa5fz8Ei5vztwNMo1hA7ds7N7Kcqhx9EX4u+WVUnxQu06hGy9XmmFRZzj3e/Ct4+ASt7aqxrA==;EndpointSuffix=core.windows.net");
 
     let buffer = Buffer.from(imageBase64, 'base64')
 
@@ -16,7 +16,7 @@ async function saveImageAzure(imageBase64) {
         }
     });
 
-    return `https://ftplddm.blob.core.windows.net/sftp/${fileName}`
+    return 'https://lddmftpimage.blob.core.windows.net/sftp/${fileName}'
 
 }
 

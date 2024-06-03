@@ -9,6 +9,7 @@ router.get('/', async (req, res) => {
                         FROM product p 
                         JOIN product_status ps ON p.status = ps.id
                         LEFT JOIN product_image pi ON (p.id = pi.id_product) 
+                        WHERE p.status = 1
                         GROUP BY p.id; 
         `;
         connection.query(query, (error, results) => {
