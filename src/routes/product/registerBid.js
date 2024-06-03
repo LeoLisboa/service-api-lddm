@@ -2,14 +2,13 @@ const express = require('express');
 const router = express.Router();
 const connection = require('../../database/connection');
 const getHeaderToken = require('../getHeaderToken');
-const { saveNotify } = require('../notify/createNotify');
+const { saveNotifyWithAddons } = require('../notify/createNotify');
 
 router.post('/', getHeaderToken, async (req, res) => {
     const userData = req.user;
     const { id_product, price } = req.body;
     let last_bid_user_id;
 
-    // Função para realizar uma query ao banco de dados e retornar uma Promise
     const queryDatabase = (query, params) => {
         return new Promise((resolve, reject) => {
             connection.query(query, params, (error, results) => {
@@ -39,10 +38,10 @@ router.post('/', getHeaderToken, async (req, res) => {
         );
 
         // Enviar notificações
-        await saveNotify('userBid', userData.id, { "id_bid": insertBidResult.insertId });
+        await saveNotifyWithAddons('userBid', userData.id, { id_product: id_product });
 
-        if (last_bid_user_id) {
-            await saveNotify('anotherUserBid', last_bid_user_id, { "id_bid": insertBidResult.insertId });
+        if (last_bid_user_id && last_bid_user_id != userData.id) {
+            await saveNotifyWithAddons('anotherUserBid', last_bid_user_id, { id_product: id_product });
         }
 
         return res.status(201).json({ message: "Lance registrado com sucesso" });

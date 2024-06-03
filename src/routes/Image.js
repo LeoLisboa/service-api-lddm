@@ -16,7 +16,7 @@ async function saveImageAzure(imageBase64) {
         }
     });
 
-    return 'https://lddmftpimage.blob.core.windows.net/sftp/${fileName}'
+    return `https://lddmftpimage.blob.core.windows.net/sftp/${fileName}`
 
 }
 

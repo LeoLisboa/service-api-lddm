@@ -1,4 +1,7 @@
 const connection = require('../../database/connection');
+const { promisify } = require('util');
+
+const queryAsync = promisify(connection.query).bind(connection);
 
 let notify = {
     welcome: {
@@ -46,10 +49,10 @@ let notify = {
 };
 
 
-async function saveNotify(type, idUser, addons) {
-    const query = 'INSERT INTO user_notification (id_user, type, title, message, addons) VALUES (?, ?, ?, ?, ?)';
+async function saveNotify(type, idUser) {
+    const query = 'INSERT INTO user_notification (id_user, type, title, message) VALUES (?, ?, ?, ?, ?)';
     return new Promise((resolve, reject) => {
-        connection.query(query, [idUser, notify[type].type, notify[type].title, notify[type].message, JSON.stringify(addons)], (error, results) => {
+        connection.query(query, [idUser, notify[type].type, notify[type].title, notify[type].message, null], (error, results) => {
             if (error) {
                 console.error('Erro ao inserir notificação:', error);
                 reject(false);
@@ -60,5 +63,28 @@ async function saveNotify(type, idUser, addons) {
     });
 }
 
-module.exports = { saveNotify };
+async function saveNotifyWithAddons(type, idUser, addons) {
+    let productResult = {}
+    try {
+        const querySelectProdcut = 'SELECT name, current_price FROM product WHERE id = (?)';
+        productResult = await queryAsync(querySelectProdcut, [addons.id_product]);
+    } catch (error) {
+        console.error(error)
+    }
+
+    try {
+        let message = notify[type].message
+            .replace('name_produto', productResult[0].name)
+            .replace('price_produto', productResult[0].current_price);
+
+        const insertNotify = 'INSERT INTO user_notification (id_user, type, title, message, addons) VALUES (?, ?, ?, ?, ?)';
+        await queryAsync(insertNotify, [idUser, notify[type].type, notify[type].title, message, JSON.stringify(addons)]);
+    } catch (error) {
+        console.error(error)
+    }
+
+    return true
+}
+
+module.exports = { saveNotify, saveNotifyWithAddons };
 
