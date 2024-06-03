@@ -20,7 +20,7 @@ router.post('/', async (req, res) => {
 
     try {
         const insertProductQuery = 'INSERT INTO product (id_user, name , `desc`, final_bid_price, grading, start_price, current_price, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-        const productResult = await queryAsync(insertProductQuery, [dataUser.id, name, desc, final_bid_price, grading, start_price, null, 0]);
+        const productResult = await queryAsync(insertProductQuery, [dataUser.id, name, desc, final_bid_price, grading, start_price, start_price, 0]);
         
         const idProduct = productResult.insertId;
 

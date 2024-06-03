@@ -18,7 +18,7 @@ router.post('/', async (req, res) => {
                 return res.status(500).json({ message: "Erro no servidor" });
             }
             idUser = results.insertId;
-            await saveNotify('welcome', idUser)
+            await saveNotify('welcome', idUser, null)
             return res.status(201).json({ message: "Usuário registrado com sucesso" });
         });
     } catch (error) {

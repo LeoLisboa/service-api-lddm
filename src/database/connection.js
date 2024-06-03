@@ -17,6 +17,15 @@ connection.connect((err) => {
         return;
     }
     console.log('Conexão bem-sucedida ao banco de dados');
+
+    // Definir o fuso horário para a sessão atual
+    connection.query("SET time_zone = '-3:00'", (err, result) => {
+        if (err) {
+            console.error('Erro ao definir o fuso horário:', err);
+            return;
+        }
+        console.log('Fuso horário definido para UTC-3');
+    });
 });
 
 module.exports = connection;
