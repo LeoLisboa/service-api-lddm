@@ -40,7 +40,7 @@ let notify = {
     },
     anotherUserBid: {
         title: "Corra para não perder",
-        type: 5,
+        type: 6,
         message: "Outro usuário ofertou no seu produto, corra antes que o leilão acabe.",
         // addons: {
         //     id_product: 0,
