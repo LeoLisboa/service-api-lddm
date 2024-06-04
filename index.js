@@ -25,6 +25,9 @@ app.use('/getUser', getUser);
 const updateUser = require('./src/routes/user/updateUser');
 app.use('/updateUser', updateUser);
 
+const userToVendor = require('./src/routes/user/userToVendor');
+app.use('/userToVendor', userToVendor);
+
 const registerRoute = require('./src/routes/user/register');
 app.use('/register', registerRoute);
 

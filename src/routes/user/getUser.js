@@ -9,10 +9,10 @@ router.get('/', getHeaderToken, (req, res) => {
 
     const query = `
         SELECT u.*, 
-               a.id AS address_id, a.cep, a.number, a.complement, a.reference, a.created_at AS address_created_at, a.updated_at AS address_updated_at
+               a.id AS address_id, a.cep, a.number, a.complement, a.reference, a.status AS address_status, a.created_at AS address_created_at, a.updated_at AS address_updated_at
         FROM user u
         LEFT JOIN user_address a ON u.id = a.id_user
-        WHERE u.id = ?  && a.status = 1
+        WHERE u.id = ?
     `;
 
     connection.query(query, [userData.id], (error, results) => {
@@ -38,7 +38,7 @@ router.get('/', getHeaderToken, (req, res) => {
         };
 
         results.forEach(result => {
-            if (result.address_id) {
+            if (result.address_id && result.address_status == 1) {
                 user.addresses.push({
                     id: result.address_id,
                     cep: result.cep,

@@ -50,9 +50,9 @@ let notify = {
 
 
 async function saveNotify(type, idUser) {
-    const query = 'INSERT INTO user_notification (id_user, type, title, message) VALUES (?, ?, ?, ?, ?)';
+    const query = 'INSERT INTO user_notification (id_user, type, title, message) VALUES (?, ?, ?, ?)';
     return new Promise((resolve, reject) => {
-        connection.query(query, [idUser, notify[type].type, notify[type].title, notify[type].message, null], (error, results) => {
+        connection.query(query, [idUser, notify[type].type, notify[type].title, notify[type].message], (error, results) => {
             if (error) {
                 console.error('Erro ao inserir notificação:', error);
                 reject(false);

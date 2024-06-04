@@ -37,12 +37,22 @@ router.post('/', getHeaderToken, async (req, res) => {
             [id_product, userData.id, price]
         );
 
+        const productResults = await queryDatabase(
+            'SELECT id_user FROM product WHERE id = ?',
+            [id_product]
+        );
+        if (productResults.length > 0) {
+            vendor_id = productResults[0].id_user;
+        }
+
         // Enviar notificações
         await saveNotifyWithAddons('userBid', userData.id, { id_product: id_product });
 
         if (last_bid_user_id && last_bid_user_id != userData.id) {
             await saveNotifyWithAddons('anotherUserBid', last_bid_user_id, { id_product: id_product });
         }
+
+        await saveNotifyWithAddons('vendorBid', vendor_id, { id_product: id_product });
 
         return res.status(201).json({ message: "Lance registrado com sucesso" });
     } catch (error) {

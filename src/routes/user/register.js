@@ -19,6 +19,7 @@ router.post('/', async (req, res) => {
             }
             idUser = results.insertId;
             await saveNotify('welcome', idUser, null)
+            await saveNotify('completeCad', idUser, null)
             return res.status(201).json({ message: "Usuário registrado com sucesso" });
         });
     } catch (error) {
