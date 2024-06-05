@@ -80,31 +80,30 @@ router.post('/finish', getHeaderToken, async (req, res) => {
     };
 
     try {
-        // Primeira consulta para obter o último id_user_bid e o preço do último lance
+        // Primeira consulta para obter o último id_user_bid
         const results = await queryDatabase(
-            'SELECT id_user_bid, price FROM product_bid WHERE id_product = ? ORDER BY id DESC LIMIT 1',
+            'SELECT id_user_bid FROM product_bid WHERE id_product = ? ORDER BY id DESC LIMIT 1',
             [id_product]
         );
-
-        let final_bid_price;
         if (results.length > 0) {
             last_bid_user_id = results[0].id_user_bid;
-            final_bid_price = results[0].price;
         }
 
-        // Atualizar o status do produto para 2 e definir o final_bid_price
+        // Atualizar o status do produto para 2
         await queryDatabase(
-            'UPDATE product SET status = 2, final_bid_price = ? WHERE id = ?',
-            [final_bid_price, id_product]
-        );
-
-        // Obter o id_user do produto
-        const productResults = await queryDatabase(
-            'SELECT id_user FROM product WHERE id = ?',
+            'UPDATE product SET status = 2 WHERE id = ?',
             [id_product]
         );
+
+        // Obter o id_user do produto e o valor de final_bid_price
+        const productResults = await queryDatabase(
+            'SELECT id_user, final_bid_price FROM product WHERE id = ?',
+            [id_product]
+        );
+        let final_bid_price;
         if (productResults.length > 0) {
             vendor_id = productResults[0].id_user;
+            final_bid_price = productResults[0].final_bid_price;
         }
 
         // Enviar notificações
@@ -116,10 +115,10 @@ router.post('/finish', getHeaderToken, async (req, res) => {
 
         await saveNotifyWithAddons('finishBidVendor', vendor_id, { id_product: id_product });
 
-        // Atualizar o preço do lance na tabela product_bid
+        // Criar um novo lance na tabela product_bid com o final_bid_price
         await queryDatabase(
-            'INSERT INTO product_bid SET price = ? WHERE id_product = ? AND id = (SELECT MAX(id) FROM product_bid WHERE id_product = ?)',
-            [final_bid_price, id_product, id_product]
+            'INSERT INTO product_bid (id_product, id_user_bid, price) VALUES (?, ?, ?)',
+            [id_product, userData.id, final_bid_price]
         );
 
         return res.status(201).json({ message: "Lance registrado com sucesso" });
