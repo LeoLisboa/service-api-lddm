@@ -10,16 +10,16 @@ router.get('/', getHeaderToken, async (req, res) => {
 
         const query = `
         SELECT 
-        p.*, 
-        CONVERT_TZ(p.created_at, '+00:00', @@session.time_zone) AS product_created_at,
-        CONVERT_TZ(p.updated_at, '+00:00', @@session.time_zone) AS product_updated_at,
-        pb.id_user_bid, 
-        pb.price, 
-        pb.percentage, 
-        CONVERT_TZ(pb.created_at, '+00:00', @@session.time_zone) AS bid_created_at, 
-        CONVERT_TZ(pb.updated_at, '+00:00', @@session.time_zone) AS bid_updated_at, 
-        GROUP_CONCAT(pi.url) AS images, 
-        ps.status AS status_name
+            p.*, 
+            CONVERT_TZ(p.created_at, '+00:00', @@session.time_zone) AS product_created_at,
+            CONVERT_TZ(p.updated_at, '+00:00', @@session.time_zone) AS product_updated_at,
+            pb.id_user_bid, 
+            pb.price, 
+            pb.percentage, 
+            CONVERT_TZ(pb.created_at, '+00:00', @@session.time_zone) AS bid_created_at, 
+            CONVERT_TZ(pb.updated_at, '+00:00', @@session.time_zone) AS bid_updated_at, 
+            GROUP_CONCAT(pi.url) AS images, 
+            ps.status AS status_name
         FROM 
             product p 
         JOIN 
@@ -49,29 +49,44 @@ router.get('/', getHeaderToken, async (req, res) => {
                 return res.status(404).json({ message: "Produto não encontrado" });
             }
 
-            // Initialize the product object
-            const produto = {
-                id: results[0].id,
-                name: results[0].name,
-                desc: results[0].desc,
-                start_price: results[0].start_price,
-                final_bid_price: results[0].final_bid_price,
-                current_price: results[0].current_price,
-                created_at: results[0].created_at,
-                updated_at: results[0].updated_at,
-                status_name: results[0].status_name,
-                images: results[0].images ? results[0].images.split(',') : []
-            };
+            // Objeto temporário para armazenar os produtos com lances agrupados
+            const produtosAgrupados = {};
 
-            produto.history_bid = results
-                .map(row => ({
+            // Iterar sobre os resultados da consulta
+            results.forEach(row => {
+                const productId = row.id;
+
+                // Verificar se o produto já está no objeto produtosAgrupados
+                if (!produtosAgrupados[productId]) {
+                    // Se não estiver, inicializar o objeto para esse produto
+                    produtosAgrupados[productId] = {
+                        id: row.id,
+                        name: row.name,
+                        desc: row.desc,
+                        start_price: row.start_price,
+                        final_bid_price: row.final_bid_price,
+                        current_price: row.current_price,
+                        created_at: row.created_at,
+                        updated_at: row.updated_at,
+                        status_name: row.status_name,
+                        images: row.images ? row.images.split(',') : [],
+                        history_bid: []
+                    };
+                }
+
+                // Adicionar o histórico de lance ao produto correspondente
+                produtosAgrupados[productId].history_bid.push({
                     price: row.price,
                     percentage: row.percentage,
                     bid_created_at: row.bid_created_at,
                     bid_updated_at: row.bid_updated_at
-                }))
+                });
+            });
 
-            return res.status(200).json({ produto });
+            // Converter o objeto em um array de produtos
+            const produtos = Object.values(produtosAgrupados);
+
+            return res.status(200).json({ produtos });
         });
     } catch (error) {
         console.error('Erro ao buscar produto:', error);
