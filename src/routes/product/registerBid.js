@@ -118,7 +118,7 @@ router.post('/finish', getHeaderToken, async (req, res) => {
 
         // Atualizar o preço do lance na tabela product_bid
         await queryDatabase(
-            'UPDATE product_bid SET price = ? WHERE id_product = ? AND id = (SELECT MAX(id) FROM product_bid WHERE id_product = ?)',
+            'INSERT INTO product_bid SET price = ? WHERE id_product = ? AND id = (SELECT MAX(id) FROM product_bid WHERE id_product = ?)',
             [final_bid_price, id_product, id_product]
         );
 
