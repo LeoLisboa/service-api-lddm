@@ -3,7 +3,7 @@ const JWT_SECRET = "diogoDefante";
 
 function generateToken(user) {
     return jwt.sign({ 
-        id: user.id, 
+        id: user.id,
     },
         JWT_SECRET,
         { expiresIn: '1d' } // Expira em um dia
