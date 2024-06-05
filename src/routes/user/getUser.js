@@ -29,6 +29,7 @@ router.get('/', getHeaderToken, (req, res) => {
             name: results[0].name,
             perfil_url: results[0].perfil_url,
             email: results[0].email,
+            cpf: results[0].cpf,
             phone: results[0].phone,
             birthdate: results[0].birthdate,
             status: results[0].status,
