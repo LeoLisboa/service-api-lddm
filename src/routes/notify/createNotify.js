@@ -46,6 +46,33 @@ let notify = {
         //     id_product: 0,
         // }
     },
+
+    finishBidVendor: {
+        title: "Seu produto foi arrematado",
+        type: 7,
+        message: "Arremataram o name_produto no valor de price_produto."
+        // addons: {
+        //     id_product: 0,
+        // }
+    },
+
+    finishBidUser: {
+        title: "Parabéns pela compra",
+        type: 8,
+        message: "Você acaba de arrematar o name_produto no valor de price_produto."
+        // addons: {
+        //     id_product: 0,
+        // }
+    },
+
+    finishAnotherUserBid: {
+        title: "Que pena",
+        type: 9,
+        message: "Outro usuário arrematou seu produto, mais sorte na proxima.",
+        // addons: {
+        //     id_product: 0,
+        // }
+    },
 };
 
 

@@ -58,6 +58,12 @@ app.use('/getAllProducts', getAllProducts);
 const getProduct = require('./src/routes/product/getProduct');
 app.use('/getProduct', getProduct);
 
+const getProductsByCustomer = require('./src/routes/product/getProductsByCustomer');
+app.use('/getProductsByCustomer', getProductsByCustomer);
+
+const getProductsByVendor = require('./src/routes/product/getProductsByVendor');
+app.use('/getProductsByVendor', getProductsByVendor);
+
 const createProduct = require('./src/routes/product/createProduct');
 app.use('/createProduct', createProduct);
 
