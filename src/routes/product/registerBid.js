@@ -106,6 +106,12 @@ router.post('/finish', getHeaderToken, async (req, res) => {
             final_bid_price = productResults[0].final_bid_price;
         }
 
+        // Criar um novo lance na tabela product_bid com o final_bid_price
+        await queryDatabase(
+            'INSERT INTO product_bid (id_product, id_user_bid, price) VALUES (?, ?, ?)',
+            [id_product, userData.id, final_bid_price]
+        );
+
         // Enviar notificações
         await saveNotifyWithAddons('finishBidUser', userData.id, { id_product: id_product });
 
@@ -114,12 +120,6 @@ router.post('/finish', getHeaderToken, async (req, res) => {
         }
 
         await saveNotifyWithAddons('finishBidVendor', vendor_id, { id_product: id_product });
-
-        // Criar um novo lance na tabela product_bid com o final_bid_price
-        await queryDatabase(
-            'INSERT INTO product_bid (id_product, id_user_bid, price) VALUES (?, ?, ?)',
-            [id_product, userData.id, final_bid_price]
-        );
 
         return res.status(201).json({ message: "Lance registrado com sucesso" });
     } catch (error) {
