@@ -28,6 +28,11 @@ router.put('/', getHeaderToken, (req, res) => {
             delete updatesData.id;
         }
 
+        if (updatesData.status) {
+            invalidFields['status'] = 'O status não pode ser modificado.';    
+            delete updatesData.status;
+        }
+
         if (updatesData.perfil_url) {
             updatesData.perfil_url = await saveImageAzure(updatesData.perfil_url);
         }
