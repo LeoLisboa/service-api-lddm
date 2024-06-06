@@ -7,7 +7,7 @@ const getHeaderToken = require('../getHeaderToken');
 router.get('/', getHeaderToken, (req, res) => {
     const userData = req.user;
 
-    const query = 'SELECT * FROM user_notification WHERE id_user = ?';
+    const query = 'SELECT * FROM user_notification WHERE id_user = ? ORDER BY id DESC';
 
     connection.query(query, [userData.id], (error, results) => {
         if (error) {
@@ -24,7 +24,7 @@ router.get('/', getHeaderToken, (req, res) => {
 router.get('/quant', getHeaderToken, (req, res) => {
     const userData = req.user;
 
-    const query = 'SELECT COUNT(*) AS notificationCount FROM user_notification WHERE id_user = ?';
+    const query = 'SELECT COUNT(*) AS notificationCount FROM user_notification WHERE id_user = ? ';
 
     connection.query(query, [userData.id], (error, results) => {
         if (error) {

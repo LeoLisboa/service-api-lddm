@@ -5,14 +5,14 @@ const connection = require('../../database/connection');
 const { saveNotify } = require('../notify/createNotify');
 
 router.post('/', async (req, res) => {
-    const {name, email, phone, birthdate, password, cpf} = req.body;
+    const {name, email, phone, birthdate, password} = req.body;
 
     let idUser = 0;
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const query = 'INSERT INTO user (name, email, phone, birthdate, password, cpf) VALUES (?, ?, ?, ?, ?, ?)';
-        connection.query(query, [name, email, phone, birthdate, hashedPassword, cpf], async (error, results) => {
+        const query = 'INSERT INTO user (name, email, phone, birthdate, password) VALUES (?, ?, ?, ?, ?)';
+        connection.query(query, [name, email, phone, birthdate, hashedPassword], async (error, results) => {
             if (error) {
                 console.error('Erro ao registrar usuário no banco de dados:', error);
                 return res.status(500).json({ message: "Erro no servidor" });

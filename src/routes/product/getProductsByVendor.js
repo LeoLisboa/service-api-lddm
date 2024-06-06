@@ -10,16 +10,16 @@ router.get('/', getHeaderToken, async (req, res) => {
 
         const query = `
         SELECT 
-            p.*, 
-            CONVERT_TZ(p.created_at, '+00:00', @@session.time_zone) AS product_created_at,
-            CONVERT_TZ(p.updated_at, '+00:00', @@session.time_zone) AS product_updated_at,
-            pb.id_user_bid, 
-            pb.price, 
-            pb.percentage, 
-            CONVERT_TZ(pb.created_at, '+00:00', @@session.time_zone) AS bid_created_at, 
-            CONVERT_TZ(pb.updated_at, '+00:00', @@session.time_zone) AS bid_updated_at, 
-            GROUP_CONCAT(pi.url) AS images, 
-            ps.status AS status_name
+        p.*, 
+        p.created_at AS product_created_at,
+        p.updated_at AS product_updated_at,
+        pb.id_user_bid, 
+        pb.price, 
+        pb.percentage, 
+        pb.created_at AS bid_created_at, 
+        pb.updated_at AS bid_updated_at, 
+        GROUP_CONCAT(pi.url) AS images, 
+        ps.status AS status_name
         FROM 
             product p 
         JOIN 

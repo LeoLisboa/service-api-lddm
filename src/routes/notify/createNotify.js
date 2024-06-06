@@ -68,7 +68,16 @@ let notify = {
     finishAnotherUserBid: {
         title: "Que pena",
         type: 9,
-        message: "Outro usuário arrematou seu produto, mais sorte na proxima.",
+        message: "Outro usuário arrematou o produto name_produto, mais sorte na proxima.",
+        // addons: {
+        //     id_product: 0,
+        // }
+    },
+
+    addProduct: {
+        title: "Produto adiconado ao leilão",
+        type: 10,
+        message: "O produto name_produto foi adionado para leilão.",
         // addons: {
         //     id_product: 0,
         // }

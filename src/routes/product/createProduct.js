@@ -4,6 +4,7 @@ const connection = require('../../database/connection');
 const { getUserFromToken } = require('../jwUtils');
 const { saveImageAzure } = require('../Image');
 const { promisify } = require('util');
+const { saveNotifyWithAddons } = require('../notify/createNotify');
 
 const queryAsync = promisify(connection.query).bind(connection);
 
@@ -19,13 +20,15 @@ router.post('/', async (req, res) => {
     let fileUrl = await saveImageAzure(imageBase64);
 
     try {
-        const insertProductQuery = 'INSERT INTO product (id_user, name , `desc`, final_bid_price, grading, start_price, current_price, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-        const productResult = await queryAsync(insertProductQuery, [dataUser.id, name, desc, final_bid_price, grading, start_price, start_price, 0]);
+        const insertProductQuery = 'INSERT INTO product (id_user, name , `desc`, final_bid_price, grading, start_price, current_price) VALUES (?, ?, ?, ?, ?, ?, ?)';
+        const productResult = await queryAsync(insertProductQuery, [dataUser.id, name, desc, final_bid_price, grading, start_price, start_price]);
         
         const idProduct = productResult.insertId;
 
         const insertImageQuery = 'INSERT INTO product_image (id_product, url) VALUES (?, ?)';
         await queryAsync(insertImageQuery, [idProduct, fileUrl]);
+
+        await saveNotifyWithAddons('addProduct', dataUser.id, { id_product: idProduct });
 
         return res.status(201).json({ message: "Produto registrado com sucesso", productId: idProduct });
     } catch (error) {

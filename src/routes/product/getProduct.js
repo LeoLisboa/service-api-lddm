@@ -10,13 +10,13 @@ router.get('/:id', async (req, res) => {
         const query = `
         SELECT 
         p.*, 
-        CONVERT_TZ(p.created_at, '+00:00', @@session.time_zone) AS product_created_at,
-        CONVERT_TZ(p.updated_at, '+00:00', @@session.time_zone) AS product_updated_at,
+        p.created_at AS product_created_at,
+        p.updated_at AS product_updated_at,
         pb.id_user_bid, 
         pb.price, 
         pb.percentage, 
-        CONVERT_TZ(pb.created_at, '+00:00', @@session.time_zone) AS bid_created_at, 
-        CONVERT_TZ(pb.updated_at, '+00:00', @@session.time_zone) AS bid_updated_at, 
+        pb.created_at AS bid_created_at, 
+        pb.updated_at AS bid_updated_at, 
         GROUP_CONCAT(pi.url) AS images, 
         ps.status AS status_name
         FROM 
@@ -56,8 +56,8 @@ router.get('/:id', async (req, res) => {
                 start_price: results[0].start_price,
                 final_bid_price: results[0].final_bid_price,
                 current_price: results[0].current_price,
-                created_at: results[0].created_at,
-                updated_at: results[0].updated_at,
+                created_at: results[0].product_created_at,
+                updated_at: results[0].product_updated_at,
                 status_name: results[0].status_name,
                 images: results[0].images ? results[0].images.split(',') : []
             };
